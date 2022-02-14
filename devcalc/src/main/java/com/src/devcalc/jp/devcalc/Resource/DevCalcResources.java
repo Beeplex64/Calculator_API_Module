@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -14,6 +15,7 @@ import com.src.devcalc.jp.devcalc.BusinessLogic.AdditionCalculatorLogic;
 import com.src.devcalc.jp.devcalc.BusinessLogic.DivisionCalculatorLogic;
 import com.src.devcalc.jp.devcalc.BusinessLogic.MultiplicationCalculatorLogic;
 import com.src.devcalc.jp.devcalc.BusinessLogic.SubtractionCalculatorLogic;
+import com.src.devcalc.jp.devcalc.BusinessLogic.UserRegistretionLogic;
 import com.src.devcalc.jp.devcalc.Entity.RequestBodyEntity;
 import com.src.devcalc.jp.devcalc.Entity.RequestEntity;
 
@@ -35,6 +37,9 @@ public class DevCalcResources {
 
 	//DivisionCalculatorLogicのインジェクション
 	DivisionCalculatorLogic divisionCalculatorLogic = new DivisionCalculatorLogic();
+	
+	//UserRegistretionLogicクラスのインジェクション
+	UserRegistretionLogic userRegistrationLogic = new UserRegistretionLogic();
 	
 	@GET
 	@Path("/addition")
@@ -58,5 +63,11 @@ public class DevCalcResources {
 	@Path("/division")
 	public Response DivisionCalcLogic(@BeanParam RequestEntity requestEntity, RequestBodyEntity requestBodyEntity) {
 		return divisionCalculatorLogic.F_DivisionService(requestEntity, requestBodyEntity);
+	}
+	
+	@POST
+	@Path("/registuser")
+	public Response RegistLogic(@BeanParam RequestEntity requestEntity, RequestBodyEntity requestBodyEntity) {
+		return userRegistrationLogic.F_RegistService(requestEntity, requestBodyEntity);
 	}
 }

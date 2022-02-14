@@ -23,12 +23,6 @@ public class MultiplicationCalculatorJDBCInsertLogic {
 		//StringUtilクラスのインスタンス化
 		StringUtil stringUtil = new StringUtil();
 		
-		//RequestEntityクラスのインスタンス化
-		RequestEntity requestEntity = new RequestEntity();
-		
-		//RequestBodyEntityクラスのインスタンス化
-		RequestBodyEntity requestBodyEntity = new RequestBodyEntity();
-		
 		//DataSourceHolderクラスのインスタンス化
 		DataSourceHolder dataSourceHolder = new DataSourceHolder();
 		

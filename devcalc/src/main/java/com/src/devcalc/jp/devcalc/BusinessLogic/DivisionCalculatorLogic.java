@@ -27,9 +27,6 @@ public class DivisionCalculatorLogic {
 		//RequestBodyEntityクラスのインスタンス化
 		RequestBodyEntity requestBodyEntity = new RequestBodyEntity();
 		
-		//DataSourceHolderクラスのインスタンス化
-		DataSourceHolder dataSourceHolder = new DataSourceHolder();
-		
 		//DivisionCalculatorJDBCSelectLogicクラスのインスタンス化
 		DivisionCalculatorJDBCSelectLogic divisionCalculatorJDBCSelectLogic = new DivisionCalculatorJDBCSelectLogic();
 		
@@ -105,7 +102,6 @@ public class DivisionCalculatorLogic {
 			
 			String userId = new String();
 			userId = requestBodyEntity.getuserid();
-			divisionCalculatorJDBCSelectLogic.F_DivisionService(userId);
 			Response DivisionCalculatorJDBCSelectLogicResponse = divisionCalculatorJDBCSelectLogic.F_DivisionService(userId);
 			
 			if(DivisionCalculatorJDBCSelectLogicResponse.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
@@ -144,9 +140,8 @@ public class DivisionCalculatorLogic {
 			Integer number2 = requestBodyEntity.getnum2();
 			String symbol = GlobalLogicVariable.divisionSymbol;
 			Integer result = Integer.parseInt(divisionResult.toString());
-			
-			divisionCalculatorJDBCInsertLogic.F_DivisionJDBCService(userId, number1, number2, symbol, result);
 			Response DivisionCalculatorJDBCInsertLogicResponse = divisionCalculatorJDBCInsertLogic.F_DivisionJDBCService(userId, number1, number2, symbol, result);
+			
 			if(DivisionCalculatorJDBCInsertLogicResponse.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
 				return F_DivisionResponse(DivisionResponseCommon.DivisionE400);
 			}else if(DivisionCalculatorJDBCInsertLogicResponse.getStatus() == Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()) {

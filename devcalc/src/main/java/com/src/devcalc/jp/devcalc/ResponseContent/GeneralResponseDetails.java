@@ -1,22 +1,19 @@
 package com.src.devcalc.jp.devcalc.ResponseContent;
 
-public class CalculatorResponseDetails {
-	
-	private String status;
+public class GeneralResponseDetails {
+
+private String status;
 	
 	private String message;
 	
 	private String time;
 	
-	private String result;
-	
 	private String apino;
 	
-	public CalculatorResponseDetails() {
+	public GeneralResponseDetails() {
 		this.setStatus(new String());
 		this.setMessage(new String());
 		this.setTime(new String());
-		this.setResult(new String());
 		this.setApino(new String());
 	}
 
@@ -42,14 +39,6 @@ public class CalculatorResponseDetails {
 
 	public void setTime(String time) {
 		this.time = time;
-	}
-
-	public String getResult() {
-		return result;
-	}
-
-	public void setResult(String result) {
-		this.result = result;
 	}
 
 	public String getApino() {

@@ -27,9 +27,6 @@ public class AdditionCalculatorLogic {
 	//RequestBodyEntityクラスのインスタンス化
 	RequestBodyEntity requestBodyEntity = new RequestBodyEntity();
 	
-	//DataSourceHolderクラスのインスタンス化
-	DataSourceHolder dataSourceHolder = new DataSourceHolder();
-	
 	//AdditionCalculatorJDBCLogicクラスのインスタンス化
 	AdditionCalculatorJDBCSelectLogic additionCalculatorJDBCSelectLogic = new AdditionCalculatorJDBCSelectLogic();
 	
@@ -105,7 +102,6 @@ public class AdditionCalculatorLogic {
 		
 		String userId = new String();
 		userId = requestBodyEntity.getuserid();
-		additionCalculatorJDBCSelectLogic.F_AdditionJDBCService(userId);
 		Response AdditionCalculatorJDBCSelectLogicResponse = additionCalculatorJDBCSelectLogic.F_AdditionJDBCService(userId);
 		
 		if(AdditionCalculatorJDBCSelectLogicResponse.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
@@ -145,9 +141,8 @@ public class AdditionCalculatorLogic {
 		Integer number2 = requestBodyEntity.getnum2();
 		String symbol = GlobalLogicVariable.additionSymbol;
 		Integer result = Integer.parseInt(additionResult.toString());
-		
-		additionCalculatorJDBCInsertLogic.F_AdditionJDBCService(userId, number1, number2, symbol, result);
 		Response AdditionCalculatorJDBCInsertLogicResponse = additionCalculatorJDBCInsertLogic.F_AdditionJDBCService(userId, number1, number2, symbol, result);
+		
 		if(AdditionCalculatorJDBCInsertLogicResponse.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
 			return F_AdditionResponse(AdditionResponseCommon.AdditionE400);
 		}else if(AdditionCalculatorJDBCInsertLogicResponse.getStatus() == Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()) {

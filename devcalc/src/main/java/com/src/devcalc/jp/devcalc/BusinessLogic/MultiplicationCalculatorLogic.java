@@ -27,9 +27,6 @@ public class MultiplicationCalculatorLogic {
 		//RequestBodyEntityクラスのインスタンス化
 		RequestBodyEntity requestBodyEntity = new RequestBodyEntity();
 		
-		//DataSourceHolderクラスのインスタンス化
-		DataSourceHolder dataSourceHolder = new DataSourceHolder();
-		
 		//MultiplicationCalculatorJDBCSelectLogicクラスのインスタンス化
 		MultiplicationCalculatorJDBCSelectLogic multiplicationCalculatorJDBCLogic = new MultiplicationCalculatorJDBCSelectLogic();
 		
@@ -105,7 +102,6 @@ public class MultiplicationCalculatorLogic {
 			
 			String userId = new String();
 			userId = requestBodyEntity.getuserid();
-			multiplicationCalculatorJDBCLogic.F_MultiplicationService(userId);
 			Response MultiplicationCalculatorJDBCLogicResponse = multiplicationCalculatorJDBCLogic.F_MultiplicationService(userId);
 			
 			if(MultiplicationCalculatorJDBCLogicResponse.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
@@ -142,9 +138,8 @@ public class MultiplicationCalculatorLogic {
 			Integer number2 = requestBodyEntity.getnum2();
 			String symbol = GlobalLogicVariable.multiplicationSymbol;
 			Integer result = Integer.parseInt(multiplicationResult.toString());
-			
-			multiplicationCalculatorJDBCInsertLogic.F_MultiplicationJDBCService(userId, number1, number2, symbol, result);
 			Response MultiplicationCalculatorJDBCInsertLogicResponse = multiplicationCalculatorJDBCInsertLogic.F_MultiplicationJDBCService(userId, number1, number2, symbol, result);
+			
 			if(MultiplicationCalculatorJDBCInsertLogicResponse.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
 				return F_MultiplicationResponse(MultiplicationResponseCommon.MultiplicationE400);
 			}else if(MultiplicationCalculatorJDBCInsertLogicResponse.getStatus() == Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()) {

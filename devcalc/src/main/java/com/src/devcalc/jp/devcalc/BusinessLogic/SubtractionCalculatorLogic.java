@@ -27,9 +27,6 @@ public class SubtractionCalculatorLogic {
 	//RequestBodyEntityクラスのインスタンス化
 	RequestBodyEntity requestBodyEntity = new RequestBodyEntity();
 	
-	//DataSourceHolderクラスのインスタンス化
-	DataSourceHolder dataSourceHolder = new DataSourceHolder();
-	
 	//SubtractionCalculatorJDBCSelectLogicクラスのインスタンス化
 	SubtractionCalculatorJDBCSelectLogic subtractionCalculatorJDBCSelectLogic = new SubtractionCalculatorJDBCSelectLogic();
 	
@@ -103,7 +100,6 @@ public class SubtractionCalculatorLogic {
 		
 		String userId = new String();
 		userId = requestBodyEntity.getuserid();
-		subtractionCalculatorJDBCSelectLogic.F_SubtractionService(userId);
 		Response SubtractionCalculatorJDBCSelectLogic = subtractionCalculatorJDBCSelectLogic.F_SubtractionService(userId);
 		
 		if(SubtractionCalculatorJDBCSelectLogic.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
@@ -140,9 +136,8 @@ public class SubtractionCalculatorLogic {
 		Integer number2 = requestBodyEntity.getnum2();
 		String symbol = GlobalLogicVariable.subtractionSymbol;
 		Integer result = Integer.parseInt(subtractionResult.toString());
-		
-		subtractionCalculatorJDBCInsertLogic.F_SubtractionJDBCService(userId, number1, number2, symbol, result);
 		Response SubtractionCalculatorJDBCInsertLogicResponse = subtractionCalculatorJDBCInsertLogic.F_SubtractionJDBCService(userId, number1, number2, symbol, result);
+		
 		if(SubtractionCalculatorJDBCInsertLogicResponse.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
 			return F_SubtractionResponse(SubtractionResponseCommon.SubtractionE400);
 		}else if(SubtractionCalculatorJDBCInsertLogicResponse.getStatus() == Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()) {

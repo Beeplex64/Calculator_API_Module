@@ -9,11 +9,13 @@ public class RequestEntity {
 	
 	private String password;
 	
-	private Integer phone;
+	private Long phone;
 	
 	private String profession;
 	
 	private String mail;
+	
+	private String age;
 
 	public String getuserid() {
 		return userid;
@@ -31,11 +33,11 @@ public class RequestEntity {
 		this.password = password;
 	}
 
-	public Integer getphone() {
+	public Long getphone() {
 		return phone;
 	}
 
-	public void setphone(Integer phone) {
+	public void setphone(Long phone) {
 		this.phone = phone;
 	}
 
@@ -54,7 +56,12 @@ public class RequestEntity {
 	public void setmail(String mail) {
 		this.mail = mail;
 	}
-	
-	
 
+	public String getage() {
+		return age;
+	}
+
+	public void setage(String age) {
+		this.age = age;
+	}
 }

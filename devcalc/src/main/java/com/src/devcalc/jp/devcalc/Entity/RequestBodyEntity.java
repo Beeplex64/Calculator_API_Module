@@ -13,13 +13,16 @@ public class RequestBodyEntity {
 	private String password;
 	
 	@HeaderParam("phone")
-	private Integer phone;
+	private Long phone;
 	
 	@HeaderParam("profession")
 	private String profession;
 	
 	@HeaderParam("mail")
 	private String mail;
+	
+	@HeaderParam("age")
+	private Integer age;
 	
 	@HeaderParam("num1")
 	private Integer num1;
@@ -43,11 +46,11 @@ public class RequestBodyEntity {
 		return this.password;
 	}
 	
-	public void setphne(Integer phone) {
+	public void setphne(Long phone) {
 		this.phone = phone;
 	}
 	
-	public Integer getphone() {
+	public Long getphone() {
 		return this.phone;
 	}
 	
@@ -65,6 +68,14 @@ public class RequestBodyEntity {
 	
 	public String getmail() {
 		return this.mail;
+	}
+	
+	public void setage(Integer age) {
+		this.age = age;
+	}
+	
+	public Integer getage() {
+		return this.age;
 	}
 	
 	public void setnum1(Integer num1) {
