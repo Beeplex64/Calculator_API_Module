@@ -15,6 +15,7 @@ import com.src.devcalc.jp.devcalc.BusinessLogic.AdditionCalculatorLogic;
 import com.src.devcalc.jp.devcalc.BusinessLogic.DivisionCalculatorLogic;
 import com.src.devcalc.jp.devcalc.BusinessLogic.MultiplicationCalculatorLogic;
 import com.src.devcalc.jp.devcalc.BusinessLogic.SubtractionCalculatorLogic;
+import com.src.devcalc.jp.devcalc.BusinessLogic.UserLoginLogic;
 import com.src.devcalc.jp.devcalc.BusinessLogic.UserRegistretionLogic;
 import com.src.devcalc.jp.devcalc.Entity.RequestBodyEntity;
 import com.src.devcalc.jp.devcalc.Entity.RequestEntity;
@@ -41,6 +42,9 @@ public class DevCalcResources {
 	//UserRegistretionLogicクラスのインジェクション
 	UserRegistretionLogic userRegistrationLogic = new UserRegistretionLogic();
 	
+	//UserLoginLogicクラスのインジェクション
+	UserLoginLogic userLoginLogic = new UserLoginLogic();
+	
 	@GET
 	@Path("/addition")
 	public Response AdditionCalcLogic(@BeanParam RequestEntity requestEntity, RequestBodyEntity requestBodyEntity) {
@@ -63,6 +67,12 @@ public class DevCalcResources {
 	@Path("/division")
 	public Response DivisionCalcLogic(@BeanParam RequestEntity requestEntity, RequestBodyEntity requestBodyEntity) {
 		return divisionCalculatorLogic.F_DivisionService(requestEntity, requestBodyEntity);
+	}
+	
+	@GET
+	@Path("/login")
+	public Response LoginLogic(@BeanParam RequestEntity requestEntity, RequestBodyEntity requestBodyEntity) {
+		return userLoginLogic.F_UserLoginService(requestEntity, requestBodyEntity);
 	}
 	
 	@POST

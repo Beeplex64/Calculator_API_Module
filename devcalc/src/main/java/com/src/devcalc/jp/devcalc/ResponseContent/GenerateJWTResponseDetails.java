@@ -1,6 +1,6 @@
 package com.src.devcalc.jp.devcalc.ResponseContent;
 
-public class GeneralResponseDetails {
+public class GenerateJWTResponseDetails {
 
 	private String status;
 	
@@ -8,13 +8,13 @@ public class GeneralResponseDetails {
 	
 	private String time;
 	
-	private String apino;
+	private String token;
 	
-	public GeneralResponseDetails() {
+	public GenerateJWTResponseDetails() {
 		this.setStatus(new String());
 		this.setMessage(new String());
 		this.setTime(new String());
-		this.setApino(new String());
+		this.setToken(new String());
 	}
 
 	public String getStatus() {
@@ -40,12 +40,12 @@ public class GeneralResponseDetails {
 	public void setTime(String time) {
 		this.time = time;
 	}
-
-	public String getApino() {
-		return apino;
+	
+	public String getToken() {
+		return token;
 	}
-
-	public void setApino(String apino) {
-		this.apino = apino;
+	
+	public void setToken(String token) {
+		this.token = token;
 	}
 }

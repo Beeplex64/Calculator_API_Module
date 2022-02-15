@@ -5,9 +5,13 @@ import java.time.LocalDateTime;
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.core.Response;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.src.devcalc.jp.devcalc.DataSourceHolder.DataSourceHolder;
 import com.src.devcalc.jp.devcalc.Entity.RequestBodyEntity;
 import com.src.devcalc.jp.devcalc.Entity.RequestEntity;
+import com.src.devcalc.jp.devcalc.GlobalVariable.GlobalDivisionLogVariable;
 import com.src.devcalc.jp.devcalc.GlobalVariable.GlobalLogicVariable;
 import com.src.devcalc.jp.devcalc.ResponseContent.CalculatorResponseDetails;
 import com.src.devcalc.jp.devcalc.ResponseContent.DivisionResponseCommon;
@@ -33,9 +37,11 @@ public class DivisionCalculatorLogic {
 		//DivisionCalculatorJDBCInsertLogicクラスのインスタンス化
 		DivisionCalculatorJDBCInsertLogic divisionCalculatorJDBCInsertLogic = new DivisionCalculatorJDBCInsertLogic();
 		
+		private static Logger log;
+		
 		//デフォルトコンストラクタ
 		public DivisionCalculatorLogic() {
-			
+			log = LogManager.getLogger(DivisionCalculatorLogic.this);
 		}
 		
 		public Response F_DivisionResponse(DivisionResponseCommon divisionResponseCommon) {
@@ -53,20 +59,19 @@ public class DivisionCalculatorLogic {
 			
 			DivisionResponseCommon divisionResponseCommon = DivisionResponseCommon.DivisionS200;
 			StringBuilder divisionResult = new StringBuilder();
-			StringBuilder divisionSEQ = new StringBuilder();
 			
 			Response divisionResponse = F_CheckRequestBody(requestEntity, requestBodyEntity);
 			if(divisionResponse.getStatus() != Response.Status.OK.getStatusCode()) {
 				return divisionResponse;
 			}else {
-				//Not Execute
+				log.info(GlobalDivisionLogVariable.DivisionLog1);
 			}
 			
 			divisionResponse = F_DivisionCalculatorSelect(requestBodyEntity);
 			if(divisionResponse.getStatus() != Response.Status.OK.getStatusCode()) {
 				return divisionResponse;
 			}else {
-				//Not Execute
+				log.info(GlobalDivisionLogVariable.DivisionLog2);
 			}
 			
 			divisionResponse = F_DivisionCalculate(requestBodyEntity, divisionResult);
@@ -75,7 +80,7 @@ public class DivisionCalculatorLogic {
 			if(divisionResponse.getStatus() != Response.Status.OK.getStatusCode()) {
 				return divisionResponse;
 			}else {
-				//Not Execute
+				log.info(GlobalDivisionLogVariable.DivisionLog3);
 			}
 			
 			divisionResponseDetails.setStatus(divisionResponseCommon.getDivisionResponseStatus());
@@ -87,6 +92,7 @@ public class DivisionCalculatorLogic {
 		}
 
 		private Response F_CheckRequestBody(RequestEntity requestEntity, RequestBodyEntity requestBodyEntity) {
+			log.info(GlobalDivisionLogVariable.DivisionLog4);
 			CalculatorResponseDetails divisionResponseDetails = new CalculatorResponseDetails();
 			
 			if(stringUtil.isNullorEmptytoString(requestBodyEntity.getuserid())) {
@@ -94,10 +100,13 @@ public class DivisionCalculatorLogic {
 			}else {
 				//Not Execute
 			}
+			
+			log.info(GlobalDivisionLogVariable.DivisionLog5);
 			return Response.status(Response.Status.OK.getStatusCode()).entity(divisionResponseDetails).build();
 		}
 		
 		private Response F_DivisionCalculatorSelect(RequestBodyEntity requestBodyEntity) {
+			log.info(GlobalDivisionLogVariable.DivisionLog6);
 			CalculatorResponseDetails divisionResponseDetails = new CalculatorResponseDetails();
 			
 			String userId = new String();
@@ -105,19 +114,24 @@ public class DivisionCalculatorLogic {
 			Response DivisionCalculatorJDBCSelectLogicResponse = divisionCalculatorJDBCSelectLogic.F_DivisionService(userId);
 			
 			if(DivisionCalculatorJDBCSelectLogicResponse.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
+				log.fatal(GlobalDivisionLogVariable.DivisionLog7);
 				return F_DivisionResponse(DivisionResponseCommon.DivisionE400);
 			}else if(DivisionCalculatorJDBCSelectLogicResponse.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
+				log.error(GlobalDivisionLogVariable.DivisionLog8);
 				return F_DivisionResponse(DivisionResponseCommon.DivisionE404);
 			}else if(DivisionCalculatorJDBCSelectLogicResponse.getStatus() == Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()) {
+				log.error(GlobalDivisionLogVariable.DivisionLog9);
 				return F_DivisionResponse(DivisionResponseCommon.DivisionE500);
 			}else {
-				//Not Execute
+				log.info(GlobalDivisionLogVariable.DivisionLog10);
 			}
 			
+			log.info(GlobalDivisionLogVariable.DivisionLog11);
 			return Response.status(Response.Status.OK.getStatusCode()).entity(divisionResponseDetails).build();
 		}
 		
 		private Response F_DivisionCalculate(RequestBodyEntity requestBodyEntity, StringBuilder divisionResult) {
+			log.info(GlobalDivisionLogVariable.DivisionLog12);
 			CalculatorResponseDetails divisionResponseDetails = new CalculatorResponseDetails();
 			
 			int divisionNum1 = 0;
@@ -129,10 +143,13 @@ public class DivisionCalculatorLogic {
 			
 			Result = divisionNum1 / divisionNum2;
 			divisionResult.append(String.valueOf(Result));
+			
+			log.info(GlobalDivisionLogVariable.DivisionLog13);
 			return Response.status(Response.Status.OK.getStatusCode()).entity(divisionResponseDetails).build();
 		}
 		
 		private Response F_DivisionCalculatorInsert(RequestBodyEntity requestBodyEntity, StringBuilder divisionResult) {
+			log.info(GlobalDivisionLogVariable.DivisionLog14);
 			CalculatorResponseDetails divisionResponseDetails = new CalculatorResponseDetails();
 			
 			String userId = requestBodyEntity.getuserid();
@@ -143,13 +160,16 @@ public class DivisionCalculatorLogic {
 			Response DivisionCalculatorJDBCInsertLogicResponse = divisionCalculatorJDBCInsertLogic.F_DivisionJDBCService(userId, number1, number2, symbol, result);
 			
 			if(DivisionCalculatorJDBCInsertLogicResponse.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
+				log.fatal(GlobalDivisionLogVariable.DivisionLog15);
 				return F_DivisionResponse(DivisionResponseCommon.DivisionE400);
 			}else if(DivisionCalculatorJDBCInsertLogicResponse.getStatus() == Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()) {
+				log.error(GlobalDivisionLogVariable.DivisionLog16);
 				return F_DivisionResponse(DivisionResponseCommon.DivisionE500);
 			}else {
-				//Not Execute
+				log.info(GlobalDivisionLogVariable.DivisionLog17);
 			}
 			
+			log.info(GlobalDivisionLogVariable.DivisionLog18);
 			return Response.status(Response.Status.OK.getStatusCode()).entity(divisionResponseDetails).build();
 		}
 }

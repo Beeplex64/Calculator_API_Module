@@ -1,7 +1,7 @@
 package com.src.devcalc.jp.devcalc.ResponseContent;
 
-public class GeneralResponseDetails {
-
+public class UserLoginResponseDetails {
+	
 	private String status;
 	
 	private String message;
@@ -10,7 +10,7 @@ public class GeneralResponseDetails {
 	
 	private String apino;
 	
-	public GeneralResponseDetails() {
+	public UserLoginResponseDetails() {
 		this.setStatus(new String());
 		this.setMessage(new String());
 		this.setTime(new String());
@@ -20,11 +20,11 @@ public class GeneralResponseDetails {
 	public String getStatus() {
 		return status;
 	}
-
+	
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
+	
 	public String getMessage() {
 		return message;
 	}
@@ -40,11 +40,11 @@ public class GeneralResponseDetails {
 	public void setTime(String time) {
 		this.time = time;
 	}
-
+	
 	public String getApino() {
 		return apino;
 	}
-
+	
 	public void setApino(String apino) {
 		this.apino = apino;
 	}

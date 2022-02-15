@@ -46,17 +46,17 @@ public class UserRegistrationJDBCSelectLogic {
 		UserRegistrationResponseCommon userRegistrationResponseCommon = UserRegistrationResponseCommon.RegistS200;
 		
 		Response registResponse = F_CheckRequestBody(userId);
-		if(registResponse.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
-			return F_UserRegistResponse(UserRegistrationResponseCommon.RegistE400);
+		if(registResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+			return registResponse;
 		}else {
 			//Not Execute
 		}
 		
 		registResponse = F_CheckUserInfoSelect(userId);
-		if(registResponse.getStatus() == Response.Status.CONFLICT.getStatusCode()) {
-			return F_UserRegistResponse(UserRegistrationResponseCommon.RegistE409);
-		}else if(registResponse.getStatus() == Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()) {
-			return F_UserRegistResponse(UserRegistrationResponseCommon.RegistE500);
+		if(registResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+			return registResponse;
+		}else {
+			
 		}
 		
 		generalResponseDetails.setStatus(userRegistrationResponseCommon.getRegistResponseStatus());

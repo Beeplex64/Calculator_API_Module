@@ -47,17 +47,15 @@ public class AdditionCalculatorJDBCSelectLogic {
 		AdditionResponseCommon additionResponseCommon = AdditionResponseCommon.AdditionS200;
 		
 		Response additionJDBCResponse = F_CheckRequestBody(userId);
-		if(additionJDBCResponse.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
-			return F_AdditionResponse(AdditionResponseCommon.AdditionE400);
+		if(additionJDBCResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+			return additionJDBCResponse;
 		}else {
 			//Not Execute
 		}
 		
 		additionJDBCResponse = F_CheckUserIDSelect(userId);
-		if(additionJDBCResponse.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
-			return F_AdditionResponse(AdditionResponseCommon.AdditionE404);
-		}else if(additionJDBCResponse.getStatus() == Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()){
-			return F_AdditionResponse(AdditionResponseCommon.AdditionE500);
+		if(additionJDBCResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+			return additionJDBCResponse;
 		}else {
 			//Not Execute
 		}

@@ -48,17 +48,17 @@ public class DivisionCalculatorJDBCSelectLogic {
 			DivisionResponseCommon divisionResponseCommon = DivisionResponseCommon.DivisionS200;
 			
 			Response divisionJDBCResponse = F_CheckRequestBody(userId);
-			if(divisionJDBCResponse.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
-				return F_DivisionResponse(DivisionResponseCommon.DivisionE400);
+			if(divisionJDBCResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+				return divisionJDBCResponse;
 			}else {
 				//Not Execute
 			}
 			
 			divisionJDBCResponse = F_CheckUserIDSelect(userId);
-			if(divisionJDBCResponse.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
-				return F_DivisionResponse(DivisionResponseCommon.DivisionE404);
-			}else if(divisionJDBCResponse.getStatus() == Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()){
-				return F_DivisionResponse(DivisionResponseCommon.DivisionE500);
+			if(divisionJDBCResponse.getStatus() != Response.Status.OK.getStatusCode()) {
+				return divisionJDBCResponse;
+			}else {
+				
 			}
 			
 			divisionResponseDetails.setStatus(divisionResponseCommon.getDivisionResponseStatus());

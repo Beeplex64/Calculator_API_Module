@@ -8,8 +8,6 @@ public class GlobalLogicVariable {
 	public static String subtractionSymbol = "-";
 	public static String multiplicationSymbol = "×";
 	public static String divisionSymbol = "÷";
-	public static String verificationSuccessResponse = "JWTToken検証完了";
-	public static String verificationJWTVerificationExceptionResponse = "JWTToken検証失敗";
-	public static String generateJWTCreationExceptionResponse = "JWTCreationExceptionが発生しました。";
 	public static String RegistInsertSQL = "INSERT INTO T_USERINFO (C_USERID, C_PHONE, C_PROFESSION, C_AGE, C_DELETE_FLG, C_LASTOPERATION, C_REGISTRATIONDATE, C_PASSWORD, C_LOGINDATE, C_LOGOUTDATE, C_JWTTOKEN, C_ADMINDELETE_FLG, C_MAIL) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	public static String JWTUpdateSQL = "UPDATE T_USERINFO SET C_JWTTOKEN = ? WHERE C_USERID = ?";
 }
