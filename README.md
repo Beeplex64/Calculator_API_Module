@@ -1,4 +1,4 @@
-# Calculator_API_Module
+# :green_book: Calculator_API_Module :green_book:  
 # :green_book: リポジトリの説明・概要
 電卓アプリケーションで利用できる各種APIリポジトリです。  
 マイクロサービスとして開発しているので、必要な機能だけを抽出し利用することができます。  
