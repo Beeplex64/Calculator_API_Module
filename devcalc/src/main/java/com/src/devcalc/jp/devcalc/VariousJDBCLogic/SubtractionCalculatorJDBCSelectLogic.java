@@ -10,10 +10,14 @@ import java.time.LocalDateTime;
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.core.Response;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.src.devcalc.jp.devcalc.DataSourceHolder.DataSourceHolder;
 import com.src.devcalc.jp.devcalc.Entity.RequestBodyEntity;
 import com.src.devcalc.jp.devcalc.Entity.RequestEntity;
 import com.src.devcalc.jp.devcalc.GlobalVariable.GlobalLogicVariable;
+import com.src.devcalc.jp.devcalc.GlobalVariable.GlobalSubtractionJDBCSelectLogVariable;
 import com.src.devcalc.jp.devcalc.ResponseContent.CalculatorResponseDetails;
 import com.src.devcalc.jp.devcalc.ResponseContent.SubtractionResponseCommon;
 import com.src.devcalc.jp.devcalc.Util.StringUtil;
@@ -27,9 +31,11 @@ public class SubtractionCalculatorJDBCSelectLogic {
 	//DataSourceHolderクラスのインスタンス化
 	DataSourceHolder dataSourceHolder = new DataSourceHolder();
 	
+	private static Logger log;
+	
 	//デフォルトコンストラクタ
 	public SubtractionCalculatorJDBCSelectLogic() {
-		
+		log = LogManager.getLogger(SubtractionCalculatorJDBCSelectLogic.this);
 	}
 	
 	public Response F_SubtractionResponse(SubtractionResponseCommon subtractionResponseCommon) {
@@ -50,14 +56,14 @@ public class SubtractionCalculatorJDBCSelectLogic {
 		if(subtractionJDBCResponse.getStatus() != Response.Status.OK.getStatusCode()) {
 			return subtractionJDBCResponse;
 		}else {
-			//Not Execute
+			log.info(GlobalSubtractionJDBCSelectLogVariable.SubtractionSelectLog1);
 		}
 		
 		subtractionJDBCResponse = F_CheckUserIDSelect(userId);
 		if(subtractionJDBCResponse.getStatus() != Response.Status.OK.getStatusCode()) {
 			return subtractionJDBCResponse;
 		}else {
-			//Not Execute
+			log.info(GlobalSubtractionJDBCSelectLogVariable.SubtractionSelectLog2);
 		}
 		
 		subtractionResponseDetails.setStatus(subtractionResponseCommon.getSubtractionResponseStatus());
@@ -68,6 +74,7 @@ public class SubtractionCalculatorJDBCSelectLogic {
 	}
 	
 	private Response F_CheckRequestBody(String userId) {
+		log.info(GlobalSubtractionJDBCSelectLogVariable.SubtractionSelectLog3);
 		CalculatorResponseDetails subtractionResponseDetails = new CalculatorResponseDetails();
 		
 		if(stringUtil.isNullorEmptytoString(userId)) {
@@ -75,10 +82,12 @@ public class SubtractionCalculatorJDBCSelectLogic {
 		}else {
 			//Not Execute
 		}
+		log.info(GlobalSubtractionJDBCSelectLogVariable.SubtractionSelectLog4);
 		return Response.status(Response.Status.OK.getStatusCode()).entity(subtractionResponseDetails).build();
 	}
 
 	private Response F_CheckUserIDSelect(String userId) {
+		log.info(GlobalSubtractionJDBCSelectLogVariable.SubtractionSelectLog5);
 		CalculatorResponseDetails subtractionResponseDetails = new CalculatorResponseDetails();
 		
 		int retryMaxCount = 0;
@@ -92,6 +101,7 @@ public class SubtractionCalculatorJDBCSelectLogic {
 					if(resultSet.next()) {
 						//Not Execute
 					}else {
+						log.error(GlobalSubtractionJDBCSelectLogVariable.SubtractionSelectLog6);
 						return F_SubtractionResponse(SubtractionResponseCommon.SubtractionE404);
 					}
 				}
@@ -100,6 +110,7 @@ public class SubtractionCalculatorJDBCSelectLogic {
 				if(retryMaxCount < 3) {
 					continue;
 				}else {
+					log.fatal(GlobalSubtractionJDBCSelectLogVariable.SubtractionSelectLog7 + classNotFoundException);
 					return F_SubtractionResponse(SubtractionResponseCommon.SubtractionE500);
 				}
 			} catch (SQLException sqlException) {
@@ -107,11 +118,14 @@ public class SubtractionCalculatorJDBCSelectLogic {
 				if(retryMaxCount < 3) {
 					continue;
 				}else {
+					log.error(GlobalSubtractionJDBCSelectLogVariable.SubtractionSelectLog8 + sqlException);
 					return F_SubtractionResponse(SubtractionResponseCommon.SubtractionE500);
 				}
 			}
 			break;
 		}
+		
+		log.info(GlobalSubtractionJDBCSelectLogVariable.SubtractionSelectLog9);
 		return Response.status(Response.Status.OK.getStatusCode()).entity(subtractionResponseDetails).build();
 	}
 }

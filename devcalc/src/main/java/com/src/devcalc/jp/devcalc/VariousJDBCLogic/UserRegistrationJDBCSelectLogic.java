@@ -10,8 +10,12 @@ import java.time.LocalDateTime;
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.core.Response;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.src.devcalc.jp.devcalc.DataSourceHolder.DataSourceHolder;
 import com.src.devcalc.jp.devcalc.GlobalVariable.GlobalLogicVariable;
+import com.src.devcalc.jp.devcalc.GlobalVariable.GlobalUserRegistrationJDBCSelectLogVariable;
 import com.src.devcalc.jp.devcalc.ResponseContent.GeneralResponseDetails;
 import com.src.devcalc.jp.devcalc.ResponseContent.UserRegistrationResponseCommon;
 import com.src.devcalc.jp.devcalc.Util.StringUtil;
@@ -25,9 +29,11 @@ public class UserRegistrationJDBCSelectLogic {
 	//DataSourceHolderクラスのインスタンス化
 	DataSourceHolder dataSourceHolder = new DataSourceHolder();
 	
+	private static Logger log;
+	
 	//デフォルトコンストラクタ
 	public UserRegistrationJDBCSelectLogic() {
-		
+		log = LogManager.getLogger(UserRegistrationJDBCSelectLogic.this);
 	}
 	
 	public Response F_UserRegistResponse(UserRegistrationResponseCommon userRegistrationResponseCommon) {
@@ -49,14 +55,14 @@ public class UserRegistrationJDBCSelectLogic {
 		if(registResponse.getStatus() != Response.Status.OK.getStatusCode()) {
 			return registResponse;
 		}else {
-			//Not Execute
+			log.info(GlobalUserRegistrationJDBCSelectLogVariable.RegistrationJDBCSelectLog1);
 		}
 		
 		registResponse = F_CheckUserInfoSelect(userId);
 		if(registResponse.getStatus() != Response.Status.OK.getStatusCode()) {
 			return registResponse;
 		}else {
-			
+			log.info(GlobalUserRegistrationJDBCSelectLogVariable.RegistrationJDBCSelectLog2);
 		}
 		
 		generalResponseDetails.setStatus(userRegistrationResponseCommon.getRegistResponseStatus());
@@ -68,6 +74,7 @@ public class UserRegistrationJDBCSelectLogic {
 
 	
 	private Response F_CheckRequestBody(String userId) {
+		log.info(GlobalUserRegistrationJDBCSelectLogVariable.RegistrationJDBCSelectLog3);
 		GeneralResponseDetails generalResponseDetails = new GeneralResponseDetails();
 		
 		if(stringUtil.isNullorEmptytoString(userId)) {
@@ -75,10 +82,13 @@ public class UserRegistrationJDBCSelectLogic {
 		}else {
 			//Not Execute
 		}
+		
+		log.info(GlobalUserRegistrationJDBCSelectLogVariable.RegistrationJDBCSelectLog4);
 		return Response.status(Response.Status.OK.getStatusCode()).entity(generalResponseDetails).build();
 	}
 	
 	private Response F_CheckUserInfoSelect(String userId) {
+		log.info(GlobalUserRegistrationJDBCSelectLogVariable.RegistrationJDBCSelectLog5);
 		GeneralResponseDetails generalResponseDetails = new GeneralResponseDetails();
 		
 		int retryMaxCount = 0;
@@ -90,6 +100,7 @@ public class UserRegistrationJDBCSelectLogic {
 				
 				try(ResultSet resultSet = preparedStatement.executeQuery()){
 					if(resultSet.next()) {
+						log.error(GlobalUserRegistrationJDBCSelectLogVariable.RegistrationJDBCSelectLog6);
 						return F_UserRegistResponse(UserRegistrationResponseCommon.RegistE409);
 					}else {
 						//Not Execute
@@ -100,6 +111,7 @@ public class UserRegistrationJDBCSelectLogic {
 				if(retryMaxCount < 3) {
 					continue;
 				}else {
+					log.fatal(GlobalUserRegistrationJDBCSelectLogVariable.RegistrationJDBCSelectLog7 + classNotFoundException);
 					return F_UserRegistResponse(UserRegistrationResponseCommon.RegistE500);
 				}
 			} catch (SQLException sqlException) {
@@ -107,11 +119,14 @@ public class UserRegistrationJDBCSelectLogic {
 				if(retryMaxCount < 3) {
 					continue;
 				}else {
+					log.error(GlobalUserRegistrationJDBCSelectLogVariable.RegistrationJDBCSelectLog8 + sqlException);
 					return F_UserRegistResponse(UserRegistrationResponseCommon.RegistE500);
 				}
 			}
 			break;
 		}
+		
+		log.info(GlobalUserRegistrationJDBCSelectLogVariable.RegistrationJDBCSelectLog9);
 		return Response.status(Response.Status.OK.getStatusCode()).entity(generalResponseDetails).build();
 	}
 }

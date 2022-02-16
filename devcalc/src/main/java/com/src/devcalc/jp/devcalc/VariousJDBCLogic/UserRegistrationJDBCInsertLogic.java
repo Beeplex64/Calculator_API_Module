@@ -10,8 +10,12 @@ import java.time.LocalDateTime;
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.core.Response;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.src.devcalc.jp.devcalc.DataSourceHolder.DataSourceHolder;
 import com.src.devcalc.jp.devcalc.GlobalVariable.GlobalLogicVariable;
+import com.src.devcalc.jp.devcalc.GlobalVariable.GlobalUserRegistrationJDBCInsertLogVariable;
 import com.src.devcalc.jp.devcalc.ResponseContent.GeneralResponseDetails;
 import com.src.devcalc.jp.devcalc.ResponseContent.UserRegistrationResponseCommon;
 import com.src.devcalc.jp.devcalc.Util.StringUtil;
@@ -25,9 +29,11 @@ public class UserRegistrationJDBCInsertLogic {
 	//DataSourceHolderクラスのインスタンス化
 	DataSourceHolder dataSourceHolder = new DataSourceHolder();
 	
+	private static Logger log;
+	
 	//デフォルトコンストラクタ
 	public UserRegistrationJDBCInsertLogic() {
-		
+		log = LogManager.getLogger(UserRegistrationJDBCInsertLogic.this);
 	}
 	
 	public Response F_UserRegistResponse(UserRegistrationResponseCommon userRegistrationResponseCommon) {
@@ -49,14 +55,14 @@ public class UserRegistrationJDBCInsertLogic {
 		if(registResponse.getStatus() != Response.Status.OK.getStatusCode()) {
 			return registResponse;
 		}else {
-			//Not Execute
+			log.info(GlobalUserRegistrationJDBCInsertLogVariable.RegistrationJDBCInsertLog1);
 		}
 		
 		registResponse = F_RegistInsert(userId, password, phone, profession, mail, age);
 		if(registResponse.getStatus() != Response.Status.OK.getStatusCode()) {
 			return registResponse;
 		}else {
-			//Not Execute
+			log.info(GlobalUserRegistrationJDBCInsertLogVariable.RegistrationJDBCInsertLog2);
 		}
 		
 		generalResponseDetails.setStatus(userRegistrationResponseCommon.getRegistResponseStatus());
@@ -67,6 +73,7 @@ public class UserRegistrationJDBCInsertLogic {
 	}
 	
 	private Response F_CheckRequestBody(String userId, String password, String phone, String profession, String mail) {
+		log.info(GlobalUserRegistrationJDBCInsertLogVariable.RegistrationJDBCInsertLog3);
 		GeneralResponseDetails generalResponseDetails = new GeneralResponseDetails();
 		
 		if(stringUtil.isNullorEmptytoString(userId) ||
@@ -78,10 +85,13 @@ public class UserRegistrationJDBCInsertLogic {
 		}else {
 			//Not Execute
 		}
+		
+		log.info(GlobalUserRegistrationJDBCInsertLogVariable.RegistrationJDBCInsertLog4);
 		return Response.status(Response.Status.OK.getStatusCode()).entity(generalResponseDetails).build();
 	}
 	
 	private Response F_RegistInsert(String userId, String password, String phone, String profession, String mail, int age) {
+		log.info(GlobalUserRegistrationJDBCInsertLogVariable.RegistrationJDBCInsertLog5);
 		GeneralResponseDetails generalResponseDetails = new GeneralResponseDetails();
 		
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -109,10 +119,14 @@ public class UserRegistrationJDBCInsertLogic {
 				connection.commit();
 			}
 		} catch (ClassNotFoundException classNotFoundException) {
+			log.fatal(GlobalUserRegistrationJDBCInsertLogVariable.RegistrationJDBCInsertLog6);
 			return F_UserRegistResponse(UserRegistrationResponseCommon.RegistE500);
 		} catch (SQLException sqlException) {
+			log.error(GlobalUserRegistrationJDBCInsertLogVariable.RegistrationJDBCInsertLog7);
 			return F_UserRegistResponse(UserRegistrationResponseCommon.RegistE500);
 		}
+		
+		log.info(GlobalUserRegistrationJDBCInsertLogVariable.RegistrationJDBCInsertLog8);
 		return Response.status(Response.Status.OK.getStatusCode()).entity(generalResponseDetails).build();
 	}
 }

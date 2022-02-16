@@ -4,6 +4,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -15,6 +16,7 @@ import com.src.devcalc.jp.devcalc.BusinessLogic.AdditionCalculatorLogic;
 import com.src.devcalc.jp.devcalc.BusinessLogic.DivisionCalculatorLogic;
 import com.src.devcalc.jp.devcalc.BusinessLogic.MultiplicationCalculatorLogic;
 import com.src.devcalc.jp.devcalc.BusinessLogic.SubtractionCalculatorLogic;
+import com.src.devcalc.jp.devcalc.BusinessLogic.UserLogicalDeleteLogic;
 import com.src.devcalc.jp.devcalc.BusinessLogic.UserLoginLogic;
 import com.src.devcalc.jp.devcalc.BusinessLogic.UserRegistretionLogic;
 import com.src.devcalc.jp.devcalc.Entity.RequestBodyEntity;
@@ -44,6 +46,9 @@ public class DevCalcResources {
 	
 	//UserLoginLogicクラスのインジェクション
 	UserLoginLogic userLoginLogic = new UserLoginLogic();
+	
+	//UserLogicalDeleteLogicクラスのインジェクション
+	UserLogicalDeleteLogic userLogicalDeleteLogic = new UserLogicalDeleteLogic();
 	
 	@GET
 	@Path("/addition")
@@ -79,5 +84,11 @@ public class DevCalcResources {
 	@Path("/registuser")
 	public Response RegistLogic(@BeanParam RequestEntity requestEntity, RequestBodyEntity requestBodyEntity) {
 		return userRegistrationLogic.F_RegistService(requestEntity, requestBodyEntity);
+	}
+	
+	@DELETE
+	@Path("/withdrawal")
+	public Response UserDelete(@BeanParam RequestEntity requestEntity, RequestBodyEntity requestBodyEntity) {
+		return userLogicalDeleteLogic.F_UserDeleteService(requestEntity, requestBodyEntity);
 	}
 }

@@ -10,8 +10,12 @@ import java.time.LocalDateTime;
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.core.Response;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.src.devcalc.jp.devcalc.DataSourceHolder.DataSourceHolder;
 import com.src.devcalc.jp.devcalc.GlobalVariable.GlobalLogicVariable;
+import com.src.devcalc.jp.devcalc.GlobalVariable.GlobalUserLoginJDBCSelectLogVariable;
 import com.src.devcalc.jp.devcalc.ResponseContent.UserLoginResponseCommon;
 import com.src.devcalc.jp.devcalc.ResponseContent.UserLoginResponseDetails;
 import com.src.devcalc.jp.devcalc.Util.StringUtil;
@@ -25,9 +29,11 @@ public class UserLoginJDBCSelectLogic {
 	//DataSourceHolderクラスのインスタンス化
 	DataSourceHolder dataSourceHolder = new DataSourceHolder();
 	
+	private static Logger log;
+	
 	//デフォルトコンストラクタ
 	public UserLoginJDBCSelectLogic() {
-		
+		log = LogManager.getLogger(UserLoginJDBCSelectLogic.this);
 	}
 
 	public Response F_UserLoginResponse(UserLoginResponseCommon userLoginResponseCommon) {
@@ -49,13 +55,13 @@ public class UserLoginJDBCSelectLogic {
 		if(loginResponse.getStatus() != Response.Status.OK.getStatusCode()) {
 			return loginResponse;
 		}else {
-			//Not Execute
+			log.info(GlobalUserLoginJDBCSelectLogVariable.LoginJDBCSelectLog1);
 		}
 		loginResponse = F_CheckUserInfoSelect(userId, password);
 		if(loginResponse.getStatus() != Response.Status.OK.getStatusCode()) {
 			return loginResponse;
 		}else {
-			//Not Execute
+			log.info(GlobalUserLoginJDBCSelectLogVariable.LoginJDBCSelectLog2);
 		}
 		
 		userLoginResponseDetails.setStatus(userLoginResponseCommon.getUserLoginResponseStatus());
@@ -66,6 +72,7 @@ public class UserLoginJDBCSelectLogic {
 	}
 	
 	private Response F_CheckRequestBody(String userId, String password) {
+		log.info(GlobalUserLoginJDBCSelectLogVariable.LoginJDBCSelectLog3);
 		UserLoginResponseDetails userLoginResponseDetails = new UserLoginResponseDetails();
 		if(stringUtil.isNullorEmptytoString(userId) ||
 			stringUtil.isNullorEmptytoString(password)) {
@@ -73,10 +80,13 @@ public class UserLoginJDBCSelectLogic {
 		}else {
 			//Not Execute
 		}
+		
+		log.info(GlobalUserLoginJDBCSelectLogVariable.LoginJDBCSelectLog4);
 		return Response.status(Response.Status.OK.getStatusCode()).entity(userLoginResponseDetails).build();
 	}
 	
 	private Response F_CheckUserInfoSelect(String userId, String password) {
+		log.info(GlobalUserLoginJDBCSelectLogVariable.LoginJDBCSelectLog5);
 		UserLoginResponseDetails userLoginResponseDetails = new UserLoginResponseDetails();
 		
 		int retryMaxCount = 0;
@@ -89,13 +99,16 @@ public class UserLoginJDBCSelectLogic {
 				try(ResultSet resultSet = preparedStatement.executeQuery()){
 					if(resultSet.next()) {
 						if(resultSet.getInt("C_DELETE_FLG") == 1) {
+							log.error(GlobalUserLoginJDBCSelectLogVariable.LoginJDBCSelectLog6);
 							return F_UserLoginResponse(UserLoginResponseCommon.LoginE401);
 						}else if(resultSet.getString("C_PASSWORD").equals(password)) {
+							log.error(GlobalUserLoginJDBCSelectLogVariable.LoginJDBCSelectLog7);
 							return F_UserLoginResponse(UserLoginResponseCommon.LoginE404);
 						}else {
 							//Not Execute
 						}
 					}else {
+						log.error(GlobalUserLoginJDBCSelectLogVariable.LoginJDBCSelectLog7);
 						return F_UserLoginResponse(UserLoginResponseCommon.LoginE404);
 					}
 				}
@@ -104,6 +117,7 @@ public class UserLoginJDBCSelectLogic {
 				if(retryMaxCount < 3) {
 					continue;
 				}else {
+					log.fatal(GlobalUserLoginJDBCSelectLogVariable.LoginJDBCSelectLog8 + classNotFoundException);
 					return F_UserLoginResponse(UserLoginResponseCommon.LoginE500);
 				}
 			} catch (SQLException sqlException) {
@@ -111,11 +125,14 @@ public class UserLoginJDBCSelectLogic {
 				if(retryMaxCount < 3) {
 					continue;
 				}else {
+					log.error(GlobalUserLoginJDBCSelectLogVariable.LoginJDBCSelectLog9 + sqlException);
 					return F_UserLoginResponse(UserLoginResponseCommon.LoginE500);
 				}
 			}
 			break;
 		}
+		
+		log.info(GlobalUserLoginJDBCSelectLogVariable.LoginJDBCSelectLog10);
 		return Response.status(Response.Status.OK.getStatusCode()).entity(userLoginResponseDetails).build();
 	}
 }

@@ -9,9 +9,13 @@ import java.time.LocalDateTime;
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.core.Response;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.src.devcalc.jp.devcalc.DataSourceHolder.DataSourceHolder;
 import com.src.devcalc.jp.devcalc.Entity.RequestBodyEntity;
 import com.src.devcalc.jp.devcalc.Entity.RequestEntity;
+import com.src.devcalc.jp.devcalc.GlobalVariable.GlobalDivisionJDBCInsertLogVariable;
 import com.src.devcalc.jp.devcalc.GlobalVariable.GlobalLogicVariable;
 import com.src.devcalc.jp.devcalc.ResponseContent.CalculatorResponseDetails;
 import com.src.devcalc.jp.devcalc.ResponseContent.DivisionResponseCommon;
@@ -26,9 +30,11 @@ public class DivisionCalculatorJDBCInsertLogic {
 		//DataSourceHolderクラスのインスタンス化
 		DataSourceHolder dataSourceHolder = new DataSourceHolder();
 		
+		private static Logger log;
+		
 		//デフォルトコンストラクタ
 		public DivisionCalculatorJDBCInsertLogic() {
-			
+			log = LogManager.getLogger(DivisionCalculatorJDBCInsertLogic.this);
 		}
 		
 		public Response F_DivisionResponse(DivisionResponseCommon divisionResponseCommon) {
@@ -49,14 +55,14 @@ public class DivisionCalculatorJDBCInsertLogic {
 			if(divisionJDBCResponse.getStatus() != Response.Status.OK.getStatusCode()) {
 				return divisionJDBCResponse;
 			}else {
-				//Not Execute
+				log.info(GlobalDivisionJDBCInsertLogVariable.DivisionJDBCInsertLog1);
 			}
 			
 			divisionJDBCResponse = F_ResultInsert(userId, number1, number2, symbol, result);
 			if(divisionJDBCResponse.getStatus() != Response.Status.OK.getStatusCode()) {
 				return divisionJDBCResponse;
 			}else {
-				//Not Execute
+				log.info(GlobalDivisionJDBCInsertLogVariable.DivisionJDBCInsertLog2);
 			}
 			
 			divisionResponseDetails.setStatus(divisionResponseCommon.getDivisionResponseStatus());
@@ -67,6 +73,7 @@ public class DivisionCalculatorJDBCInsertLogic {
 		}
 
 		private Response  F_CheckRequestBody(String userId, String symbol) {
+			log.info(GlobalDivisionJDBCInsertLogVariable.DivisionJDBCInsertLog3);
 			CalculatorResponseDetails divisionResponseDetails = new CalculatorResponseDetails();
 			
 			if(stringUtil.isNullorEmptytoString(userId) ||
@@ -75,10 +82,12 @@ public class DivisionCalculatorJDBCInsertLogic {
 			}else {
 				//Not Execute
 			}
+			log.info(GlobalDivisionJDBCInsertLogVariable.DivisionJDBCInsertLog4);
 			return Response.status(Response.Status.OK.getStatusCode()).entity(divisionResponseDetails).build();
 		}
 		
 		private Response F_ResultInsert(String userId, Integer number1, Integer number2, String symbol, Integer result) {
+			log.info(GlobalDivisionJDBCInsertLogVariable.DivisionJDBCInsertLog5);
 			CalculatorResponseDetails divisionResponseDetails = new CalculatorResponseDetails();
 			
 			try(Connection connection = dataSourceHolder.connection(Duration.ofSeconds(12))){
@@ -93,10 +102,14 @@ public class DivisionCalculatorJDBCInsertLogic {
 					connection.commit();
 				}
 			} catch (ClassNotFoundException classNotFoundException) {
-				return F_DivisionResponse(DivisionResponseCommon.DivisionE400);
+				log.fatal(GlobalDivisionJDBCInsertLogVariable.DivisionJDBCInsertLog6 + classNotFoundException);
+				return F_DivisionResponse(DivisionResponseCommon.DivisionE500);
 			} catch (SQLException sqlException) {
-				return F_DivisionResponse(DivisionResponseCommon.DivisionE400);
+				log.error(GlobalDivisionJDBCInsertLogVariable.DivisionJDBCInsertLog7 + sqlException);
+				return F_DivisionResponse(DivisionResponseCommon.DivisionE500);
 			}
+			
+			log.info(GlobalDivisionJDBCInsertLogVariable.DivisionJDBCInsertLog8);
 			return Response.status(Response.Status.OK.getStatusCode()).entity(divisionResponseDetails).build();
 		}
 }

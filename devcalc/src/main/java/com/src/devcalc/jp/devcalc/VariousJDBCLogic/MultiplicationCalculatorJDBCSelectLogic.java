@@ -10,10 +10,14 @@ import java.time.LocalDateTime;
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.core.Response;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.src.devcalc.jp.devcalc.DataSourceHolder.DataSourceHolder;
 import com.src.devcalc.jp.devcalc.Entity.RequestBodyEntity;
 import com.src.devcalc.jp.devcalc.Entity.RequestEntity;
 import com.src.devcalc.jp.devcalc.GlobalVariable.GlobalLogicVariable;
+import com.src.devcalc.jp.devcalc.GlobalVariable.GlobalMultiplicationJDBCSelectLogVariable;
 import com.src.devcalc.jp.devcalc.ResponseContent.CalculatorResponseDetails;
 import com.src.devcalc.jp.devcalc.ResponseContent.MultiplicationResponseCommon;
 import com.src.devcalc.jp.devcalc.Util.StringUtil;
@@ -27,9 +31,11 @@ public class MultiplicationCalculatorJDBCSelectLogic {
 	//DataSourceHolderクラスのインスタンス化
 	DataSourceHolder dataSourceHolder = new DataSourceHolder();
 	
+	private static Logger log;
+	
 	//デフォルトコンストラクタ
 	public MultiplicationCalculatorJDBCSelectLogic() {
-		
+		log = LogManager.getLogger(MultiplicationCalculatorJDBCSelectLogic.this);
 	}
 	
 	public Response F_MultiplicationResponse(MultiplicationResponseCommon multiplicationResponseCommon) {
@@ -50,14 +56,14 @@ public class MultiplicationCalculatorJDBCSelectLogic {
 		if(multiplicationJDBCResponse.getStatus() != Response.Status.OK.getStatusCode()) {
 			return multiplicationJDBCResponse;
 		}else {
-			//Not Execute
+			log.info(GlobalMultiplicationJDBCSelectLogVariable.MultiplicationJDBCSelectLog1);
 		}
 		
 		multiplicationJDBCResponse = F_CheckUserIDSelect(userId);
 		if(multiplicationJDBCResponse.getStatus() != Response.Status.OK.getStatusCode()) {
 			return multiplicationJDBCResponse;
 		}else {
-			//Not Execute
+			log.info(GlobalMultiplicationJDBCSelectLogVariable.MultiplicationJDBCSelectLog2);
 		}
 		
 		multiplicationResponseDetails.setStatus(multiplicationResponseCommon.getMultiplicationResponseStatus());
@@ -68,6 +74,7 @@ public class MultiplicationCalculatorJDBCSelectLogic {
 	}
 
 	private Response F_CheckRequestBody(String userId) {
+		log.info(GlobalMultiplicationJDBCSelectLogVariable.MultiplicationJDBCSelectLog3);
 		CalculatorResponseDetails multiplicationResponseDetails = new CalculatorResponseDetails();
 		
 		if(stringUtil.isNullorEmptytoString(userId)) {
@@ -75,10 +82,12 @@ public class MultiplicationCalculatorJDBCSelectLogic {
 		}else {
 			//Not Execute
 		}
+		log.info(GlobalMultiplicationJDBCSelectLogVariable.MultiplicationJDBCSelectLog4);
 		return Response.status(Response.Status.OK.getStatusCode()).entity(multiplicationResponseDetails).build();
 	}
 	
 	private Response F_CheckUserIDSelect(String userId) {
+		log.info(GlobalMultiplicationJDBCSelectLogVariable.MultiplicationJDBCSelectLog5);
 		CalculatorResponseDetails multiplicationResponseDetails = new CalculatorResponseDetails();
 		
 		int retryMaxCount = 0;
@@ -92,6 +101,7 @@ public class MultiplicationCalculatorJDBCSelectLogic {
 					if(resultSet.next()) {
 						//Not Execute
 					}else {
+						log.error(GlobalMultiplicationJDBCSelectLogVariable.MultiplicationJDBCSelectLog6);
 						return F_MultiplicationResponse(MultiplicationResponseCommon.MultiplicationE404);
 					}
 				}
@@ -100,6 +110,7 @@ public class MultiplicationCalculatorJDBCSelectLogic {
 				if(retryMaxCount < 3) {
 					continue;
 				}else {
+					log.fatal(GlobalMultiplicationJDBCSelectLogVariable.MultiplicationJDBCSelectLog7);
 					return F_MultiplicationResponse(MultiplicationResponseCommon.MultiplicationE500);
 				}
 			} catch (SQLException sqlException) {
@@ -107,11 +118,14 @@ public class MultiplicationCalculatorJDBCSelectLogic {
 				if(retryMaxCount < 3) {
 					continue;
 				}else {
+					log.error(GlobalMultiplicationJDBCSelectLogVariable.MultiplicationJDBCSelectLog8);
 					return F_MultiplicationResponse(MultiplicationResponseCommon.MultiplicationE500);
 				}
 			}
 			break;
 		}
+		
+		log.info(GlobalMultiplicationJDBCSelectLogVariable.MultiplicationJDBCSelectLog9);
 		return Response.status(Response.Status.OK.getStatusCode()).entity(multiplicationResponseDetails).build();
 	}
 }
