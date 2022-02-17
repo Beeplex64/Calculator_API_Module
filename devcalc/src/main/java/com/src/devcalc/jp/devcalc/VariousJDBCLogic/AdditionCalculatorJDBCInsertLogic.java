@@ -12,10 +12,7 @@ import javax.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.src.devcalc.jp.devcalc.BusinessLogic.DivisionCalculatorLogic;
 import com.src.devcalc.jp.devcalc.DataSourceHolder.DataSourceHolder;
-import com.src.devcalc.jp.devcalc.Entity.RequestBodyEntity;
-import com.src.devcalc.jp.devcalc.Entity.RequestEntity;
 import com.src.devcalc.jp.devcalc.GlobalVariable.GlobalAdditionJDBCInsertLogVariable;
 import com.src.devcalc.jp.devcalc.GlobalVariable.GlobalLogicVariable;
 import com.src.devcalc.jp.devcalc.ResponseContent.AdditionResponseCommon;
