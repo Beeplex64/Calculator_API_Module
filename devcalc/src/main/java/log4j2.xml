@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="OFF">
+	<appenders>
+		<!-- output console for JSON -->
+		<Console name="Console" target="SYSTEM_OUT">
+			<JSONLayout compact="true" eventEol="true" locationInfo="true" properties="true">
+			</JSONLayout>
+		</Console>
+		<!-- output console for tsv -->
+		<Console name="ConsoleTSV" target="SYSTEM_OUT">
+			<PatternLayout>
+				<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}{UTC}	%m%n</pattern>
+			</PatternLayout>
+		</Console>
+		<File name="File" fileName="/logs/normal_app.log">
+			<PatternLayout>
+				<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</pattern>
+			</PatternLayout>
+		</File>
+		<RollingFile name="RollingFile" fileName="/logs/rolling_app.log" filePattern="/logs/_rolling_app_%d{yyyy-MM-dd}.log.gz">
+			<PatternLayout>
+				<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+		</RollingFile>
+		<RollingFile name="RollingFile" fileName="/logs/rolling_app.json" filePattern="/logs/rolling_app_%d{yyyy-MM-dd}.json">
+			<JSONLayout compact="true" eventEol="true" locationInfo="true">
+			</JSONLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+		</RollingFile>
+	</appenders>
+	<loggers>
+		<!-- 全パッケージ配下のクラスに対して設定するログレベル -->
+		<root level="all">
+			<appender-ref ref="ConsoleTSV" />
+			<appender-ref ref="File" />
+			<appender-ref ref="RollingFile" />
+		</root>
+		<!-- 指定したパッケージ配下のクラスに対して設定するログレベル -->
+		<!-- <logger name="com.kakakikikeke.sample" level="trace"> <appender-ref ref="Console" /> </logger> -->
+	</loggers>
+</configuration>
