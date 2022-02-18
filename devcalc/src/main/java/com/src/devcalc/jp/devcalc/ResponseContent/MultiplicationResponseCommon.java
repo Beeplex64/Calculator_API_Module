@@ -9,8 +9,8 @@ public enum MultiplicationResponseCommon {
 	//ErrorResponse
 	MultiplicationE400(Response.Status.BAD_REQUEST.getStatusCode(), "E400", "システムエラーが発生しました。管理者に問い合わせてください。", "2.MultiplicationCalcAPI"),
 	MultiplicationE401(Response.Status.UNAUTHORIZED.getStatusCode(), "E401", "システムエラーが発生しました。管理者に問い合わせてください。", "2.MultiplicationCalcAPI"),
-	MultiplicationE404(Response.Status.NOT_FOUND.getStatusCode(), "E404", "システムエラー発生しました。管理者に問い合わせてください。", "2.MultiplicationCalcAPI"),
-	MultiplicationE500(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), "E500", "システムエラー発生しました。管理者に問い合わせてください。", "2.MultiplicationCalcAPI");
+	MultiplicationE404(Response.Status.NOT_FOUND.getStatusCode(), "E404", "システムエラーが発生しました。管理者に問い合わせてください。", "2.MultiplicationCalcAPI"),
+	MultiplicationE500(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), "E500", "システムエラーが発生しました。管理者に問い合わせてください。", "2.MultiplicationCalcAPI");
 	
 	private int Status;
 	

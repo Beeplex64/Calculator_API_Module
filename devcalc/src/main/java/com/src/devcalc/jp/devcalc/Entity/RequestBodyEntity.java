@@ -30,6 +30,15 @@ public class RequestBodyEntity {
 	@HeaderParam("num2")
 	private Integer num2;
 	
+	@HeaderParam("request")
+	private String request;
+	
+	@HeaderParam("priority")
+	private String priority;
+	
+	@HeaderParam("inquiry")
+	private String inquiry;
+	
 	public void setuserid(String userid) {
 		this.userid = userid;
 	}
@@ -93,5 +102,28 @@ public class RequestBodyEntity {
 	public Integer getnum2() {
 		return this.num2;
 	}
-
+	
+	public void setrequest(String request) {
+		this.request = request;
+	}
+	
+	public String getrequest() {
+		return this.request;
+	}
+	
+	public void setpriority(String priority) {
+		this.priority = priority;
+	}
+	
+	public String getpriority() {
+		return this.priority;
+	}
+	
+	public void setinquiry(String inquiry) {
+		this.inquiry = inquiry;
+	}
+	
+	public String getinquiry() {
+		return this.inquiry;
+	}
 }

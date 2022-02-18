@@ -49,7 +49,7 @@ public class UserRegistrationJDBCSelectLogic {
 	public Response F_UserRegistJDBC(String userId) {
 		GeneralResponseDetails generalResponseDetails = new GeneralResponseDetails();
 		
-		UserRegistrationResponseCommon userRegistrationResponseCommon = UserRegistrationResponseCommon.RegistS200;
+		UserRegistrationResponseCommon userRegistrationResponseCommon = UserRegistrationResponseCommon.RegistS201;
 		
 		Response registResponse = F_CheckRequestBody(userId);
 		if(registResponse.getStatus() != Response.Status.OK.getStatusCode()) {
