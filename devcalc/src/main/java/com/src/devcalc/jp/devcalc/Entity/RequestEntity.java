@@ -16,6 +16,12 @@ public class RequestEntity {
 	private String mail;
 	
 	private String age;
+	
+	private String request;
+	
+	private String priority;
+	
+	private String inquiry;
 
 	public String getuserid() {
 		return userid;
@@ -63,5 +69,29 @@ public class RequestEntity {
 
 	public void setage(String age) {
 		this.age = age;
+	}
+
+	public String getrequest() {
+		return request;
+	}
+
+	public void setrequest(String request) {
+		this.request = request;
+	}
+
+	public String getpriority() {
+		return priority;
+	}
+
+	public void setpriority(String priority) {
+		this.priority = priority;
+	}
+
+	public String getinquiry() {
+		return inquiry;
+	}
+
+	public void setinquiry(String inquiry) {
+		this.inquiry = inquiry;
 	}
 }

@@ -82,6 +82,7 @@ public class SubtractionCalculatorJDBCInsertLogic {
 		}else {
 			//Not Execute
 		}
+		
 		log.info(GlobalSubtractionJDBCInsertLogVariable.SubtractionJDBCInsertLog4);
 		return Response.status(Response.Status.OK.getStatusCode()).entity(subtractionResponseDetails).build();
 	}

@@ -49,7 +49,7 @@ public class UserRegistrationJDBCInsertLogic {
 	public Response F_RegistJDBCService(String userId, String password, String phone, String profession, String mail, int age) {
 		GeneralResponseDetails generalResponseDetails = new GeneralResponseDetails();
 		
-		UserRegistrationResponseCommon userRegistrationResponseCommon = UserRegistrationResponseCommon.RegistS200;
+		UserRegistrationResponseCommon userRegistrationResponseCommon = UserRegistrationResponseCommon.RegistS201;
 		
 		Response registResponse = F_CheckRequestBody(userId, password, phone, profession, mail);
 		if(registResponse.getStatus() != Response.Status.OK.getStatusCode()) {
@@ -97,7 +97,7 @@ public class UserRegistrationJDBCInsertLogic {
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		int logicalDelete_flg = 0;
 		int adminDelete_flg = 0;
-		String jwtToken = "initToken";
+		final String jwtToken = "initToken";
 		
 		try(Connection connection = dataSourceHolder.connection(Duration.ofSeconds(12))){
 			connection.setAutoCommit(false);

@@ -1,8 +1,13 @@
 package com.src.devcalc.jp.devcalc.BusinessLogic;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.Future;
 
-import javax.enterprise.context.RequestScoped;
+import javax.ejb.AsyncResult;
+import javax.ejb.Asynchronous;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.ws.rs.core.Response;
 
 import org.apache.logging.log4j.LogManager;
@@ -18,7 +23,8 @@ import com.src.devcalc.jp.devcalc.Util.StringUtil;
 import com.src.devcalc.jp.devcalc.VariousJDBCLogic.UserRegistrationJDBCInsertLogic;
 import com.src.devcalc.jp.devcalc.VariousJDBCLogic.UserRegistrationJDBCSelectLogic;
 
-@RequestScoped
+@Stateless
+@TransactionManagement(TransactionManagementType.BEAN)
 public class UserRegistretionLogic {
 	
 	//StringUtilクラスのインスタンス化
@@ -53,17 +59,25 @@ public class UserRegistretionLogic {
 		return Response.status(userRegistrationResponseCommon.getStatus()).entity(generalResponseDetails).build();
 	}
 
-	public Response F_RegistService(RequestEntity requestEntity, RequestBodyEntity requestBodyEntity) {
+	@Asynchronous
+	public Future<Response> F_RegistService(RequestEntity requestEntity, RequestBodyEntity requestBodyEntity) {
 		GeneralResponseDetails generalResponseDetails = new GeneralResponseDetails();
 		
-		UserRegistrationResponseCommon userRegistrationResponseCommon = UserRegistrationResponseCommon.RegistS200;
+		UserRegistrationResponseCommon userRegistrationResponseCommon = UserRegistrationResponseCommon.RegistS201;
+		
+		generalResponseDetails.setStatus(userRegistrationResponseCommon.getRegistResponseStatus());
+		generalResponseDetails.setMessage(userRegistrationResponseCommon.getRegistResponseMessage());
+		generalResponseDetails.setTime(LocalDateTime.now().toString());
+		generalResponseDetails.setApino(userRegistrationResponseCommon.getRegistResponseAPINo());
+		
 		StringBuilder hashedPassword = new StringBuilder();
 		StringBuilder hashedPhone = new StringBuilder();
 		StringBuilder hashedMail = new StringBuilder();
 		
+		
 		Response registResponse = F_CheckRequestBody(requestEntity, requestBodyEntity);
 		if(registResponse.getStatus() != Response.Status.OK.getStatusCode()) {
-			return registResponse;
+			return new AsyncResult<Response>(registResponse);
 		}else {
 			log.info(GlobalUserRegistrationLogVariable.UserRegistLog1);
 		}
@@ -76,23 +90,20 @@ public class UserRegistretionLogic {
 		
 		registResponse = F_CheckUserInfoSelect(requestBodyEntity);
 		if(registResponse.getStatus() != Response.Status.OK.getStatusCode()) {
-			return registResponse;
+			return new AsyncResult<Response>(registResponse);
 		}else {
 			log.info(GlobalUserRegistrationLogVariable.UserRegistLog2);
 		}
 		
 		registResponse = F_RegistUserInfoInsert(requestBodyEntity, hashedPassword, hashedPhone, hashedMail);
 		if(registResponse.getStatus() != Response.Status.OK.getStatusCode()) {
-			return registResponse;
+			return new AsyncResult<Response>(registResponse);
 		}else {
 			log.info(GlobalUserRegistrationLogVariable.UserRegistLog3);
 		}
 		
-		generalResponseDetails.setStatus(userRegistrationResponseCommon.getRegistResponseStatus());
-		generalResponseDetails.setMessage(userRegistrationResponseCommon.getRegistResponseMessage());
-		generalResponseDetails.setTime(LocalDateTime.now().toString());
-		generalResponseDetails.setApino(userRegistrationResponseCommon.getRegistResponseAPINo());
-		return Response.status(Response.Status.OK.getStatusCode()).entity(generalResponseDetails).build();
+		
+		return new AsyncResult<Response>(registResponse);
 	}
 	
 	private Response F_CheckRequestBody(RequestEntity requestEntity, RequestBodyEntity requestBodyEntity) {

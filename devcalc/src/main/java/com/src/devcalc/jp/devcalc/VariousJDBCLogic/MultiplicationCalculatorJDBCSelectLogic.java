@@ -82,6 +82,7 @@ public class MultiplicationCalculatorJDBCSelectLogic {
 		}else {
 			//Not Execute
 		}
+		
 		log.info(GlobalMultiplicationJDBCSelectLogVariable.MultiplicationJDBCSelectLog4);
 		return Response.status(Response.Status.OK.getStatusCode()).entity(multiplicationResponseDetails).build();
 	}
