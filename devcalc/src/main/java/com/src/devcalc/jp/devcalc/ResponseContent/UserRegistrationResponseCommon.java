@@ -5,7 +5,8 @@ import javax.ws.rs.core.Response;
 public enum UserRegistrationResponseCommon {
 	
 	//SuccessResponse
-	RegistS200(Response.Status.CREATED.getStatusCode(), "S201", "SUCCESS", "5.UserRegistrationAPI"),
+	RegistAsyncS200(Response.Status.OK.getStatusCode(), "S200", "登録を受け付けました。 メールが届かない場合は、既にそのユーザーIDが利用されているかシステムで何らかのエラーが発生している可能性がございますので、再度ご登録をお願いいたします。", "5.UserRegistrationAPI"),
+	RegistS201(Response.Status.CREATED.getStatusCode(), "S201", "SUCCESS", "5.UserRegistrationAPI"),
 	//ErrorResponse
 	RegistE400(Response.Status.BAD_REQUEST.getStatusCode(), "E400", "システムエラーが発生しました。管理者に問い合わせてください。", "5.UserRegistrationAPI"),
 	RegistE409(Response.Status.CONFLICT.getStatusCode(), "E409", "既にそのユーザーIDは利用されています。", "5.UserRegistrationAPI"),

@@ -1,5 +1,7 @@
 package com.src.devcalc.jp.devcalc.Resource;
 
+import java.util.concurrent.Future;
+
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.BeanParam;
@@ -19,6 +21,11 @@ import com.src.devcalc.jp.devcalc.BusinessLogic.SubtractionCalculatorLogic;
 import com.src.devcalc.jp.devcalc.BusinessLogic.UserLogicalDeleteLogic;
 import com.src.devcalc.jp.devcalc.BusinessLogic.UserLoginLogic;
 import com.src.devcalc.jp.devcalc.BusinessLogic.UserRegistretionLogic;
+import com.src.devcalc.jp.devcalc.BusinessLogic.UserRequestLogic;
+import com.src.devcalc.jp.devcalc.CallAsyncBusinessLogic.AsyncUserInquiryLogicCall;
+import com.src.devcalc.jp.devcalc.CallAsyncBusinessLogic.AsyncUserLogicalDeleteLogicCall;
+import com.src.devcalc.jp.devcalc.CallAsyncBusinessLogic.AsyncUserRegistrationLogicCall;
+import com.src.devcalc.jp.devcalc.CallAsyncBusinessLogic.AsyncUserRequestLogicCall;
 import com.src.devcalc.jp.devcalc.Entity.RequestBodyEntity;
 import com.src.devcalc.jp.devcalc.Entity.RequestEntity;
 
@@ -42,13 +49,19 @@ public class DevCalcResources {
 	DivisionCalculatorLogic divisionCalculatorLogic = new DivisionCalculatorLogic();
 	
 	//UserRegistretionLogicクラスのインジェクション
-	UserRegistretionLogic userRegistrationLogic = new UserRegistretionLogic();
+	AsyncUserRegistrationLogicCall asyncUserRegistrationLogicCall = new AsyncUserRegistrationLogicCall();
 	
 	//UserLoginLogicクラスのインジェクション
 	UserLoginLogic userLoginLogic = new UserLoginLogic();
 	
-	//UserLogicalDeleteLogicクラスのインジェクション
-	UserLogicalDeleteLogic userLogicalDeleteLogic = new UserLogicalDeleteLogic();
+	//AsyncUserLogicalDeleteLogicCallクラスのインジェクション
+	AsyncUserLogicalDeleteLogicCall asyncUserLogicalDeleteLogicCall = new AsyncUserLogicalDeleteLogicCall();
+	
+	//AsyncUserRequestLogicCallクラスのインジェクション
+	AsyncUserRequestLogicCall asyncUserRequestLogicCall = new AsyncUserRequestLogicCall();
+	
+	// AsyncUserInquiryLogicCallクラスのインジェクション
+	 AsyncUserInquiryLogicCall  asyncUserInquiryLogicCall = new  AsyncUserInquiryLogicCall();
 	
 	@GET
 	@Path("/addition")
@@ -83,12 +96,24 @@ public class DevCalcResources {
 	@POST
 	@Path("/registuser")
 	public Response RegistLogic(@BeanParam RequestEntity requestEntity, RequestBodyEntity requestBodyEntity) {
-		return userRegistrationLogic.F_RegistService(requestEntity, requestBodyEntity);
+		return asyncUserRegistrationLogicCall.CallAsyncUserRegistrationLogicService(requestEntity, requestBodyEntity);
+	}
+	
+	@POST
+	@Path("/request")
+	public Response RequestLogic(@BeanParam RequestEntity requestEntity, RequestBodyEntity requestBodyEntity) {
+		return asyncUserRequestLogicCall.CallAsyncUserRequestLogicService(requestEntity, requestBodyEntity);
+	}
+	
+	@POST
+	@Path("/inquiry")
+	public Response InquiryLogic(@BeanParam RequestEntity requestEntity, RequestBodyEntity requestBodyEntity) {
+		return asyncUserInquiryLogicCall.CallAsyncUserInquiryLogicService(requestEntity, requestBodyEntity);
 	}
 	
 	@DELETE
 	@Path("/withdrawal")
 	public Response UserDelete(@BeanParam RequestEntity requestEntity, RequestBodyEntity requestBodyEntity) {
-		return userLogicalDeleteLogic.F_UserDeleteService(requestEntity, requestBodyEntity);
+		return asyncUserLogicalDeleteLogicCall.CallAsyncUserLogicalDeleteLogicService(requestEntity, requestBodyEntity);
 	}
 }

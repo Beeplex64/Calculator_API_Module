@@ -1,8 +1,13 @@
 package com.src.devcalc.jp.devcalc.BusinessLogic;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.Future;
 
-import javax.enterprise.context.RequestScoped;
+import javax.ejb.AsyncResult;
+import javax.ejb.Asynchronous;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.ws.rs.core.Response;
 
 import org.apache.logging.log4j.LogManager;
@@ -14,10 +19,10 @@ import com.src.devcalc.jp.devcalc.GlobalVariable.GlobalUserLogicalDeleteLogVaria
 import com.src.devcalc.jp.devcalc.ResponseContent.GeneralResponseDetails;
 import com.src.devcalc.jp.devcalc.ResponseContent.UserLogicalDeleteResponseCommon;
 import com.src.devcalc.jp.devcalc.Util.StringUtil;
-import com.src.devcalc.jp.devcalc.VariousJDBCLogic.SubtractionCalculatorJDBCSelectLogic;
 import com.src.devcalc.jp.devcalc.VariousJDBCLogic.UserLogicalDeleteJDBCUpdateLogic;
 
-@RequestScoped
+@Stateless
+@TransactionManagement(TransactionManagementType.BEAN)
 public class UserLogicalDeleteLogic {
 	
 	//StringUtilクラスのインスタンス化
@@ -49,30 +54,32 @@ public class UserLogicalDeleteLogic {
 		return Response.status(userLogicalDeleteResponseCommon.getStatus()).entity(generalResponseDetails).build();
 	}
 	
-	public Response F_UserDeleteService(RequestEntity requestEntity, RequestBodyEntity requestBodyEntity) {
+	@Asynchronous
+	public Future<Response> F_UserDeleteService(RequestEntity requestEntity, RequestBodyEntity requestBodyEntity) {
 		GeneralResponseDetails generalResponseDetails = new GeneralResponseDetails();
 		
 		UserLogicalDeleteResponseCommon userLogicalDeleteResponseCommon = UserLogicalDeleteResponseCommon.DeleteS200;
 		
+		generalResponseDetails.setStatus(userLogicalDeleteResponseCommon.getUserDeleteResponseStatus());
+		generalResponseDetails.setMessage(userLogicalDeleteResponseCommon.getUserDeleteResponseMessage());
+		generalResponseDetails.setTime(LocalDateTime.now().toString());
+		generalResponseDetails.setApino(userLogicalDeleteResponseCommon.getUserDeleteResponseAPINo());
+		
 		Response deleteResponse = F_CheckRequestBody(requestEntity, requestBodyEntity);
 		if(deleteResponse.getStatus() != Response.Status.OK.getStatusCode()) {
-			return deleteResponse;
+			return new AsyncResult<Response>(deleteResponse);
 		}else {
 			log.info(GlobalUserLogicalDeleteLogVariable.UserDeleteLog1);
 		}
 		
 		deleteResponse = F_ExecuteUserDelete(requestBodyEntity);
 		if(deleteResponse.getStatus() != Response.Status.OK.getStatusCode()) {
-			return deleteResponse;
+			return new AsyncResult<Response>(deleteResponse);
 		}else {
 			log.info(GlobalUserLogicalDeleteLogVariable.UserDeleteLog2);
 		}
 		
-		generalResponseDetails.setStatus(userLogicalDeleteResponseCommon.getUserDeleteResponseStatus());
-		generalResponseDetails.setMessage(userLogicalDeleteResponseCommon.getUserDeleteResponseMessage());
-		generalResponseDetails.setTime(LocalDateTime.now().toString());
-		generalResponseDetails.setApino(userLogicalDeleteResponseCommon.getUserDeleteResponseAPINo());
-		return Response.status(Response.Status.OK.getStatusCode()).entity(generalResponseDetails).build();
+		return new AsyncResult<Response>(deleteResponse);
 	}
 	
 	private Response F_CheckRequestBody(RequestEntity requestEntity, RequestBodyEntity requestBodyEntity) {

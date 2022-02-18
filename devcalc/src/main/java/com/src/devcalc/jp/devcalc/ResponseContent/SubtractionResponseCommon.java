@@ -9,7 +9,7 @@ public enum SubtractionResponseCommon {
 	//ErrorResponse
 	SubtractionE400(Response.Status.BAD_REQUEST.getStatusCode(), "E400", "システムエラーが発生しました。管理者に問い合わせてください。", "3.SubtractionCalcAPI"),
 	SubtractionE401(Response.Status.UNAUTHORIZED.getStatusCode(), "E401", "システムエラーが発生しました。管理者に問い合わせてください。", "3.SubtractionCalcAPI"),
-	SubtractionE404(Response.Status.NOT_FOUND.getStatusCode(), "E404", "システムエラー発生しました。管理者に問い合わせてください。", "3.SubtractionCalcAPI"),
+	SubtractionE404(Response.Status.NOT_FOUND.getStatusCode(), "E404", "システムエラーが発生しました。管理者に問い合わせてください。", "3.SubtractionCalcAPI"),
 	SubtractionE500(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), "E500", "システムエラーが発生しました。管理者に問い合わせてください。", "3.SubtractionCalcAPI");
 	
 	private int Status;

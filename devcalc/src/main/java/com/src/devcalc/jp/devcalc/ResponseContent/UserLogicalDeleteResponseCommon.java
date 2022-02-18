@@ -6,6 +6,7 @@ public enum UserLogicalDeleteResponseCommon {
 	
 	//SuccessResponse
 	DeleteS200(Response.Status.OK.getStatusCode(), "S200", "SUCCESS", "7.WithDrawalAPI"),
+	DeleteAsyncS200(Response.Status.OK.getStatusCode(), "S200", "退会処理を受け付けました。", "7.WithDrawalAPI"),
 	//ErrorResponse
 	DeleteE400(Response.Status.BAD_REQUEST.getStatusCode(), "E400", "システムエラーが発生しました。管理者に問い合わせてください。", "7.WithDrawalAPI"),
 	DeleteE401(Response.Status.UNAUTHORIZED.getStatusCode(), "E401", "システムエラーが発生しました。管理者に問い合わせてください。", "7.WithDrawalAPI"),
